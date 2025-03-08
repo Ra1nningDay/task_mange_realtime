@@ -1,14 +1,22 @@
+"use client";
+
 import axios from "axios";
 import { Task } from "../types/task";
-    
-export default async function Home() {
-    const res = await axios.get("http://localhost:3000/api/tasks", {
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+import { useState, useEffect } from "react";
 
-    const tasks = res.data;
+export default function Home() {
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [newTask, setNewTask] = useState("");
+
+    useEffect(() => {
+        const fetchTask = async () => {
+            const res = await axios.get("http://localhost:3000/api/tasks", {
+                headers: { "Content-Type": "application/json" },
+            });
+            setTasks(res.data);
+        };
+        fetchTask();
+    }, []);
 
     return (
         <div>
