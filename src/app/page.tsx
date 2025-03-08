@@ -18,9 +18,30 @@ export default function Home() {
         fetchTask();
     }, []);
 
+    async function handleAdd() {
+        if (!newTask.trim()) return;
+
+        try {
+            const res = await axios.post("http://localhost:3000/api/tasks", {
+                name: newTask,
+                completed: false,
+            });
+            setTasks([...tasks, res.data]);
+            setNewTask("");
+        } catch (err) {
+            console.error("Error Adding Task", err);
+        }
+    }
+
     return (
         <div>
             <h1>Tasks</h1>
+            <input
+                type="text"
+                onChange={(e) => setNewTask(e.target.value)}
+                value={newTask}
+            />
+            <button onClick={handleAdd}>Add Task</button>
             <ul>
                 {tasks.map((task: Task) => (
                     <li key={task.id}>
