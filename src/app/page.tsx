@@ -1,17 +1,34 @@
 "use client";
 
+// import socket from "../utils/socket";
 import axios from "axios";
 import { Task } from "../types/task";
 import { useState, useEffect } from "react";
 
 export default function Home() {
+    // useEffect(() => {
+    //     socket.connect();
+
+    //     socket.on("connect", () => {
+    //         console.log("Connected to WebSocket ✅");
+    //     });
+
+    //     socket.on("disconnect", () => {
+    //         console.log("Disconnected from WebSocket ❌");
+    //     });
+
+    //     return () => {
+    //         socket.disconnect();
+    //     };
+    // }, []);
+
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newTask, setNewTask] = useState<string>("");
     // const [isCompeted, setCompeted] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchTask = async () => {
-            const res = await axios.get("http://localhost:3000/api/tasks", {
+            const res = await axios.get("http://localhost:3001/api/tasks", {
                 headers: { "Content-Type": "application/json" },
             });
             setTasks(res.data);
@@ -23,7 +40,7 @@ export default function Home() {
         if (!newTask.trim()) return;
 
         try {
-            const res = await axios.post("http://localhost:3000/api/tasks", {
+            const res = await axios.post("http://localhost:3001/api/tasks", {
                 name: newTask,
                 completed: false,
             });
@@ -36,7 +53,7 @@ export default function Home() {
 
     async function handleUpdate(id: number) {
         try {
-            await axios.put(`http://localhost:3000/api/tasks/${id}`, {
+            await axios.put(`http://localhost:3001/api/tasks/${id}`, {
                 completed: true,
             });
             setTasks((prevTasks) =>
@@ -51,7 +68,7 @@ export default function Home() {
 
     async function handleDel(id: number) {
         try {
-            await axios.delete(`http://localhost:3000/api/tasks/${id}`);
+            await axios.delete(`http://localhost:3001/api/tasks/${id}`);
             setTasks(tasks.filter((task) => task.id !== id));
         } catch (err) {
             console.error("Error to delete task", err);
